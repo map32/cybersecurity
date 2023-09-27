@@ -3,15 +3,46 @@
 # desc
 #
 
-[zookd.c:1612]
-description goes here. for example, the 'buf' variable can be
-overwritten by the 'msg' variable because ...
+[http.c:103]
+    url_decode(reqpath, sp1);
+    sp1 holds the pointer to the requested address part of the request line.
+    there is no check for the reqpath length in url_decode, which means reqpath as a stack variable can be overflowed.
+    this can be prevented by stack canaries.
 
-    <paste offending line(s) of code here>
+[http.c:159]
+    url_decode(value, sp);
+    sp holds the parsed "value" of the header element "name: value"
+    there is no check for the value length, which means reqpath as a stack variable can be overflowed.
+    this can be prevented by stack canaries.
 
-[http.c:1512]
-another description.
+[http.c:165]
+    sprintf(envvar, "HTTP_%s", buf);
+    envvar is 512 bytes long and stored in the stack.
+    buf would normally store the "name" of "name: value"
+    since buf is 8192 bytes long (stored in vss) it can be used to overflow envvar
+    since it does not check for the length.
+    this can be prevented by stack canaries.
 
-    <paste offending line(s) of code here>
+[http.c:477]
+    setenv(env, p, 1);
+    this stores the pair "AAAA=BBBB" as an environment variable with name
+    "AAAA" and value "BBBB" while it parses the request line.
+    This can be used to store bytecode as an environmental variable,
+    then combined with other overflow exploit to point to this bytecode.
+    this cannot be prevented by stack canaries.
+
+[http.c:477]
+    setenv(env, p, 1);
+    this stores the pair "AAAA: BBBB" as an environment variable with name
+    "AAAA" and value "BBBB" while it parses the headers.
+    This can be used to store bytecode as an environmental variable,
+    then combined with other overflow exploit to point to this bytecode.
+    this cannot be prevented by stack canaries.
+
+[http.c:282]
+    strcat(pn,name);
+    name is a given REQUEST_URI as inputted and processed by the program.
+    if it is long enough pn which has a length of 1024 can be overflowed.
+
 
 # many more come here

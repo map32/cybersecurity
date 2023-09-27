@@ -1,1 +1,4 @@
 ## Place your answers here.
+2a: overflows reqpath, resulting in zookd-exstack crashing and terminating the entire program
+2b: overflows value, resulting in zookfs returning to an invalid address which crashes
+zookfs but does not terminate the entire program. (zookld, zookd remain alive)
