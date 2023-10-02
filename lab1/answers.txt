@@ -1,4 +1,5 @@
-## Place your answers here.
-2a: overflows reqpath, resulting in zookd-exstack crashing and terminating the entire program
-2b: overflows value, resulting in zookfs returning to an invalid address which crashes
-zookfs but does not terminate the entire program. (zookld, zookd remain alive)
+[http.c:282]
+    strcat(pn,name);
+    this bug can be used, along with including "/home/httpd/grades.txt"
+    in either the query string or the environmental variables, to overwrite
+    ebp/eip into libc functions.
