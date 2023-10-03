@@ -44,5 +44,7 @@
     name is a given REQUEST_URI as inputted and processed by the program.
     if it is long enough pn which has a length of 1024 can be overflowed.
 
-
+[http.c:165]
+    snprintf(envvar, 512, "HTTP_%s", buf);
+    since envvar is 512 bytes long buf only writes the first 512-5-1 = 506 chars into envvar
 # many more come here

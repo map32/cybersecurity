@@ -3,3 +3,24 @@
     this bug can be used, along with including "/home/httpd/grades.txt"
     in either the query string or the environmental variables, to overwrite
     ebp/eip into libc functions.
+
+[http.c:317]
+    if ((filefd = open(pn, O_RDONLY)) < 0)
+    pn is the request_uri part of the http request, which is just the requested address
+    if pn contains a percent-escaped path like "..%2f" then the server can refer to the root directory
+    and from there sensitive files like /etc/passwd and many others
+    This works because the url_decode function translates percent encoded input into byte text, and there is no check
+    for if the directory path contains ".." and can go outside of where the server is located.
+    A fix to this would need a check for pn if it points to a path outside of the server directory.
+
+    
+[http.c:282]
+    strncat(pn, name, 1024 - strlen(pn));
+    the strcat on pn was fixed by setting a limit on the max number of characters to be appended,
+    by calculating from pn's max capacity (1024) and subtracting out the current length.
+
+[http.c:437]
+    void url_decode(char *dst, const char *src, int dst_len)
+    the url_decode function was redefined to include the length of the destination char array.
+    it keeps track of dst length internally and if the current length equals dst_len, the last
+    char is set to null and the function returns.
